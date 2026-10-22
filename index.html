@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#e94f9b">
+<title>StudyPink — Pengingat Belajar</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--pink:#e94f9b;--pink2:#ff8ec5;--pale:#fff0f7;--ink:#4a2440;--muted:#8b7183;--white:#fff;--line:#f5d5e6;--shadow:0 12px 35px #c9508d1c}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(160deg,#fff7fb,#ffeaf4 55%,#fff);color:var(--ink);min-height:100vh}
+header{padding:22px 16px 30px;background:linear-gradient(120deg,#e94f9b,#ff8ec5);color:white;border-radius:0 0 28px 28px}
+.wrap{max-width:980px;margin:auto} .top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:900;font-size:1.35rem;letter-spacing:.2px}.brand small{display:block;font-size:.75rem;font-weight:600;opacity:.9;letter-spacing:1px}.status{font-size:.76rem;background:#ffffff30;border:1px solid #ffffff70;border-radius:99px;padding:8px 10px}
+h1{font-size:clamp(1.55rem,5vw,2.3rem);line-height:1.12;margin:25px 0 8px}.hero p{margin:0;opacity:.95}.main{padding:18px 14px 40px}.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}.card{background:#fff;border:1px solid #f7d7e7;border-radius:22px;padding:18px;box-shadow:var(--shadow);min-width:0}.card h2{font-size:1.08rem;margin:0 0 14px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}label{font-size:.82rem;font-weight:750}input,select,textarea{font:inherit;color:var(--ink);background:#fffafd;border:1px solid var(--line);border-radius:12px;padding:12px;width:100%;min-width:0;outline-color:var(--pink)}button{font:inherit;border:0;border-radius:13px;padding:12px 15px;cursor:pointer;font-weight:800;transition:transform .15s}button:active{transform:scale(.98)}.primary{background:var(--pink);color:#fff}.secondary{background:var(--pale);color:#b82e79;border:1px solid var(--line)}.danger{background:#fff0f0;color:#b93252}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.note{font-size:.8rem;color:var(--muted);line-height:1.5;margin:12px 0 0}.permission{background:#fff6fb;border:1px dashed #ec9dc6;border-radius:15px;padding:13px;margin-bottom:15px}.permission strong{display:block;margin-bottom:4px}.reminder{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:16px;padding:13px;margin:10px 0}.emoji{background:var(--pale);width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:13px;font-size:1.3rem}.rbody{flex:1;min-width:0}.rtitle{font-weight:850;overflow-wrap:anywhere}.rmeta{font-size:.8rem;color:var(--muted);margin-top:4px}.rbuttons{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}.rbuttons button{font-size:.78rem;padding:8px 10px}.empty{text-align:center;padding:28px 8px;color:var(--muted)}.empty span{font-size:2.2rem;display:block;margin-bottom:7px}.foot{text-align:center;color:var(--muted);font-size:.78rem;padding:0 12px 28px}.pill{font-size:.72rem;background:#ffe2f0;color:#a72b6e;padding:4px 8px;border-radius:99px;display:inline-block;margin-top:6px}.hidden{display:none!important}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.main{padding:14px 11px 30px}.card{padding:15px}.top{align-items:flex-start}.status{max-width:48%;text-align:center}.formgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:390px){.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.brand{font-size:1.15rem}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="top"><div class="brand">💗 StudyPink <small>YOUR STUDY COMPANION</small></div><div class="status" id="pushStatus">Notifikasi belum diaktifkan</div></div>
+  <div class="hero"><h1>Belajar lebih teratur,<br>raih mimpi satu per satu ✨</h1><p>Buat jadwalmu. StudyPink akan mengingatkanmu.</p></div>
+</div></header>
+<main class="main wrap">
+  <div class="permission">
+    <strong>🔔 Aktifkan notifikasi StudyPink</strong>
+    <div class="note" style="margin:0 0 10px">Agar pengingat bisa masuk saat halaman ditutup, aktifkan notifikasi push dan daftarkan perangkat ini. Jadwal juga harus tersimpan ke server.</div>
+    <div class="actions" style="margin-top:0"><button class="primary" id="enablePush">Aktifkan Notifikasi</button><button class="secondary" id="testPush">Tes Notifikasi</button></div>
+    <p class="note" id="pushHelp">Perlu HTTPS (GitHub Pages bisa) dan konfigurasi OneSignal pada file ini.</p>
+  </div>
+  <div class="grid">
+    <section class="card">
+      <h2>🌷 Buat Pengingat</h2>
+      <form id="reminderForm">
+        <div class="formgrid">
+          <div class="field full"><label for="title">Nama pengingat</label><input id="title" maxlength="100" placeholder="Contoh: Mengerjakan tugas Matematika" required></div>
+          <div class="field"><label for="nickname">Nama panggilan</label><input id="nickname" maxlength="40" placeholder="Wawa"></div>
+          <div class="field"><label for="subject">Mata pelajaran</label><select id="subject"><option>Matematika</option><option>Bahasa Indonesia</option><option>Bahasa Inggris</option><option>IPA</option><option>IPS</option><option>Komputer</option><option>Membaca</option><option>Lainnya</option></select></div>
+          <div class="field"><label for="date">Tanggal</label><input type="date" id="date" required></div>
+          <div class="field"><label for="time">Jam</label><select id="time" required></select></div>
+          <div class="field full"><label for="message">Pesan notifikasi</label><textarea id="message" rows="2" maxlength="180" placeholder="Yuk, semangat belajar! 📚"></textarea></div>
+        </div>
+        <div class="actions"><button class="primary" type="submit">Simpan Pengingat</button><button class="secondary" type="reset" id="resetForm">Kosongkan</button></div>
+        <p class="note">Jadwal yang disimpan di halaman ini tersimpan di perangkat. Untuk notifikasi terjadwal ketika web ditutup, ikuti bagian konfigurasi server di README dan simpan jadwal ke Supabase.</p>
+      </form>
+    </section>
+    <section class="card">
+      <h2>🗓️ Jadwal Saya</h2>
+      <div class="actions" style="margin-top:0;margin-bottom:10px"><button class="secondary" id="refresh">Muat ulang</button><button class="secondary" id="clearDone">Hapus yang lewat</button></div>
+      <div id="reminderList"></div>
+    </section>
+  </div>
+</main>
+<div class="foot">Made with 💗 for your learning journey · StudyPink</div>
+<script>
+/* ==========================================================
+   KONFIGURASI: isi setelah membuat akun OneSignal dan Supabase.
+   Jangan pernah memasukkan SERVICE ROLE KEY atau REST API KEY
+   rahasia ke file HTML. OneSignal App ID memang public.
+   ========================================================== */
+const CONFIG = {
+  ONESIGNAL_APP_ID: "ISI_ONESIGNAL_APP_ID_DI_SINI",
+  SUPABASE_URL: "ISI_SUPABASE_PROJECT_URL_DI_SINI",
+  SUPABASE_ANON_KEY: "ISI_SUPABASE_ANON_KEY_DI_SINI"
+};
+const STORAGE_KEY = "studypink_reminders_v1";
+const $ = id => document.getElementById(id);
+const readyConfig = () => !CONFIG.ONESIGNAL_APP_ID.startsWith("ISI_") && !CONFIG.SUPABASE_URL.startsWith("ISI_") && !CONFIG.SUPABASE_ANON_KEY.startsWith("ISI_");
+function localISODate(d=new Date()){const off=d.getTimezoneOffset();return new Date(d.getTime()-off*60000).toISOString().slice(0,10)}
+$("date").min=localISODate(); $("date").value=localISODate();
+for(let h=0;h<24;h++) for(let m of [0,15,30,45]) {let v=String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");let o=document.createElement("option");o.value=v;o.textContent=v;$("time").appendChild(o)}
+$("time").value="19:00";
+function getItems(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]")}catch{return []}}
+function saveItems(items){localStorage.setItem(STORAGE_KEY,JSON.stringify(items))}
+function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function render(){
+ const items=getItems().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+ const box=$("reminderList");
+ if(!items.length){box.innerHTML='<div class="empty"><span>🌸</span>Belum ada pengingat.<br>Yuk, buat jadwal pertamamu!</div>';return}
+ box.innerHTML=items.map(r=>`<div class="reminder"><div class="emoji">📚</div><div class="rbody"><div class="rtitle">${escapeHTML(r.title)}</div><div class="rmeta">📅 ${escapeHTML(r.date)} · ⏰ ${escapeHTML(r.time)}<br>📘 ${escapeHTML(r.subject)}${r.nickname?' · untuk '+escapeHTML(r.nickname):''}</div><span class="pill">${new Date(r.date+'T'+r.time+':00')<new Date()?'Waktu lewat':'Terjadwal'}</span><div class="rbuttons"><button class="secondary" data-edit="${r.id}">Edit</button><button class="danger" data-delete="${r.id}">Hapus</button></div></div></div>`).join("");
+ box.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>{saveItems(getItems().filter(x=>x.id!==b.dataset.delete));render()});
+ box.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>{let r=getItems().find(x=>x.id===b.dataset.edit);if(!r)return;$("title").value=r.title;$("nickname").value=r.nickname||"";$("subject").value=r.subject;$("date").value=r.date;$("time").value=r.time;$("message").value=r.message||"";saveItems(getItems().filter(x=>x.id!==r.id));render();window.scrollTo({top:0,behavior:"smooth"})});
+}
+$("reminderForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const item={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),title:$("title").value.trim(),nickname:$("nickname").value.trim(),subject:$("subject").value,date:$("date").value,time:$("time").value,message:$("message").value.trim()||"Yuk, semangat belajar! 📚",created_at:new Date().toISOString()};
+ if(new Date(item.date+"T"+item.time+":00")<=new Date()){alert("Pilih waktu yang masih akan datang ya 💗");return}
+ const items=getItems();items.push(item);saveItems(items);render();
+ if(readyConfig()) await syncReminder(item);
+ e.target.reset();$("date").min=localISODate();$("date").value=localISODate();$("time").value="19:00";
+ alert(readyConfig()?"Pengingat tersimpan di perangkat dan dikirim ke server. 💗":"Pengingat tersimpan di perangkat ini. Untuk push saat web ditutup, lengkapi konfigurasi server sesuai README.");
+});
+async function syncReminder(item){
+ try{
+  const res=await fetch(CONFIG.SUPABASE_URL+"/rest/v1/reminders",{method:"POST",headers:{"Content-Type":"application/json","apikey":CONFIG.SUPABASE_ANON_KEY,"Authorization":"Bearer "+CONFIG.SUPABASE_ANON_KEY,"Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({client_id:item.id,title:item.title,nickname:item.nickname,subject:item.subject,reminder_date:item.date,reminder_time:item.time,message:item.message,status:"pending"})});
+  if(!res.ok)throw new Error(await res.text());
+ }catch(err){console.error(err);alert("Jadwal lokal tersimpan, tetapi gagal disinkronkan ke server. Periksa konfigurasi Supabase.");}
+}
+$("refresh").onclick=render;
+$("clearDone").onclick=()=>{if(confirm("Hapus semua pengingat yang waktunya sudah lewat?")){saveItems(getItems().filter(r=>new Date(r.date+"T"+r.time+":00")>=new Date()));render()}};
+$("testPush").onclick=async()=>{
+ if("Notification" in window && Notification.permission==="granted"){new Notification("StudyPink 💗",{body:"Hiii! Ini tes notifikasi StudyPink 📚"});return}
+ alert("Aktifkan notifikasi terlebih dahulu. Jika push belum dikonfigurasi, tombol ini belum dapat mengirim push saat web ditutup.");
+};
+async function initOneSignal(){
+ if(!CONFIG.ONESIGNAL_APP_ID||CONFIG.ONESIGNAL_APP_ID.startsWith("ISI_")){$("pushStatus").textContent="Perlu konfigurasi push";return}
+ window.OneSignalDeferred=window.OneSignalDeferred||[];
+ window.OneSignalDeferred.push(async function(OneSignal){
+  await OneSignal.init({appId:CONFIG.ONESIGNAL_APP_ID,allowLocalhostAsSecureOrigin:true});
+  $("pushStatus").textContent=OneSignal.User.PushSubscription.optedIn?"Notifikasi aktif":"Push belum aktif";
+  $("enablePush").onclick=async()=>{try{await OneSignal.Notifications.requestPermission();await OneSignal.User.PushSubscription.optIn();$("pushStatus").textContent="Permintaan notifikasi dikirim";alert("Jika izin browser muncul, pilih Izinkan. Lanjutkan konfigurasi server sesuai README.")}catch(e){alert("Notifikasi belum dapat diaktifkan. Periksa HTTPS dan konfigurasi OneSignal.")}};
+ });
+ const s=document.createElement("script");s.src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";s.defer=true;document.head.appendChild(s);
+}
+if(!("Notification" in window)){$("pushHelp").textContent="Browser ini tidak mendukung Web Notifications. Coba Chrome versi terbaru."}
+initOneSignal();render();
+</script>
+</body></html>
